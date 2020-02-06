@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xyafu.project.wxapp.mapper.AppSchoolMapper">
+    
+    <resultMap type="AppSchool" id="AppSchoolResult">
+        <result property="id"    column="id"    />
+        <result property="schoolname"    column="schoolname"    />
+        <result property="englishname"    column="englishname"    />
+        <result property="images"    column="images"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectAppSchoolVo">
+        select id, schoolname, englishname, images, create_by, create_time, update_by, update_time from app_school
+    </sql>
+
+    <select id="selectAppSchoolList" parameterType="AppSchool" resultMap="AppSchoolResult">
+        <include refid="selectAppSchoolVo"/>
+        <where>
+            <if test="schoolname != null  and schoolname != ''"> and schoolname like concat('%', #{schoolname}, '%')</if>
+            <if test="englishname != null  and englishname != ''"> and englishname like concat('%', #{englishname}, '%')</if>
+            <if test="images != null  and images != ''"> and images like concat('%', #{images}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectAppSchoolById" parameterType="String" resultMap="AppSchoolResult">
+        <include refid="selectAppSchoolVo"/>
+        where id = #{id}
+    </select>
+    
+    <insert id="insertAppSchool" parameterType="AppSchool">
+        insert into app_school
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,
+            <if test="schoolname != null  and schoolname != ''">schoolname,</if>
+            <if test="englishname != null  and englishname != ''">englishname,</if>
+            <if test="images != null  and images != ''">images,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            replace(uuid(),'-',''),
+            <if test="schoolname != null  and schoolname != ''">#{schoolname},</if>
+            <if test="englishname != null  and englishname != ''">#{englishname},</if>
+            <if test="images != null  and images != ''">#{images},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAppSchool" parameterType="AppSchool">
+        update app_school
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="schoolname != null  and schoolname != ''">schoolname = #{schoolname},</if>
+            <if test="englishname != null  and englishname != ''">englishname = #{englishname},</if>
+            <if test="images != null  and images != ''">images = #{images},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAppSchoolById" parameterType="String">
+        delete from app_school where id = #{id}
+    </delete>
+
+    <delete id="deleteAppSchoolByIds" parameterType="String">
+        delete from app_school where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

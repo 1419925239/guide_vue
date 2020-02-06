@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xyafu.project.wxapp.mapper.AppMapMapper">
+    
+    <resultMap type="AppMap" id="AppMapResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="description"    column="description"    />
+        <result property="logo"    column="logo"    />
+        <result property="images"    column="images"    />
+        <result property="longitude"    column="longitude"    />
+        <result property="latitude"    column="latitude"    />
+        <result property="category"    column="category"    />
+        <result property="orderNum"    column="order_num"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectAppMapVo">
+        select id, title, description, logo, images, longitude, latitude, category, order_num, create_by, create_time, update_by, update_time from app_map
+    </sql>
+
+    <select id="selectAppMapList" parameterType="AppMap" resultMap="AppMapResult">
+        <include refid="selectAppMapVo"/>
+        <where>
+            <if test="title != null  and title != ''"> and title like concat('%', #{title}, '%') order by order_num asc</if>
+            <if test="description != null  and description != ''"> and description like concat('%', #{description}, '%')</if>
+            <if test="logo != null  and logo != ''"> and logo = #{logo}</if>
+            <if test="images != null  and images != ''"> and images = #{images}</if>
+            <if test="longitude != null  and longitude != ''"> and longitude = #{longitude}</if>
+            <if test="latitude != null  and latitude != ''"> and latitude = #{latitude}</if>
+            <if test="category != null  and category != ''"> and category = #{category} order by order_num asc</if>
+            <if test="orderNum != null "> and order_num = #{orderNum}</if>
+        </where>
+    </select>
+    
+    <select id="selectAppMapById" parameterType="String" resultMap="AppMapResult">
+        <include refid="selectAppMapVo"/>
+        where id = #{id}
+    </select>
+    
+    <insert id="insertAppMap" parameterType="AppMap">
+        insert into app_map
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,
+            <if test="title != null  and title != ''">title,</if>
+            <if test="description != null  and description != ''">description,</if>
+            <if test="logo != null  and logo != ''">logo,</if>
+            <if test="images != null  and images != ''">images,</if>
+            <if test="longitude != null  and longitude != ''">longitude,</if>
+            <if test="latitude != null  and latitude != ''">latitude,</if>
+            <if test="category != null  and category != ''">category,</if>
+            <if test="orderNum != null ">order_num,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            replace(uuid(),'-',''),
+            <if test="title != null  and title != ''">#{title},</if>
+            <if test="description != null  and description != ''">#{description},</if>
+            <if test="logo != null  and logo != ''">#{logo},</if>
+            <if test="images != null  and images != ''">#{images},</if>
+            <if test="longitude != null  and longitude != ''">#{longitude},</if>
+            <if test="latitude != null  and latitude != ''">#{latitude},</if>
+            <if test="category != null  and category != ''">#{category},</if>
+            <if test="orderNum != null ">#{orderNum},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAppMap" parameterType="AppMap">
+        update app_map
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null  and title != ''">title = #{title},</if>
+            <if test="description != null  and description != ''">description = #{description},</if>
+            <if test="logo != null  and logo != ''">logo = #{logo},</if>
+            <if test="images != null  and images != ''">images = #{images},</if>
+            <if test="longitude != null  and longitude != ''">longitude = #{longitude},</if>
+            <if test="latitude != null  and latitude != ''">latitude = #{latitude},</if>
+            <if test="category != null  and category != ''">category = #{category},</if>
+            <if test="orderNum != null ">order_num = #{orderNum},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAppMapById" parameterType="String">
+        delete from app_map where id = #{id}
+    </delete>
+
+    <delete id="deleteAppMapByIds" parameterType="String">
+        delete from app_map where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xyafu.project.system.mapper.SysAttachmentsMapper">
+    
+    <resultMap type="SysAttachments" id="SysAttachmentsResult">
+        <result property="id"    column="id"    />
+        <result property="fileName"    column="file_name"    />
+        <result property="filePath"    column="file_path"    />
+        <result property="fileSize"    column="file_size"    />
+        <result property="mediaType"    column="media_type"    />
+        <result property="suffix"    column="suffix"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectSysAttachmentsVo">
+        select id, file_name, file_path, file_size, media_type, suffix, create_by, create_time, update_by, update_time from sys_attachments
+    </sql>
+
+    <select id="selectSysAttachmentsList" parameterType="SysAttachments" resultMap="SysAttachmentsResult">
+        <include refid="selectSysAttachmentsVo"/>
+        <where>  
+            <if test="fileName != null  and fileName != ''"> and file_name like concat('%', #{fileName}, '%')</if>
+            <if test="mediaType != null  and mediaType != ''"> and media_type = #{mediaType}</if>
+            <if test="suffix != null  and suffix != ''"> and suffix = #{suffix}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysAttachmentsById" parameterType="Long" resultMap="SysAttachmentsResult">
+        <include refid="selectSysAttachmentsVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSysAttachments" parameterType="SysAttachments" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_attachments
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fileName != null  and fileName != ''">file_name,</if>
+            <if test="filePath != null  and filePath != ''">file_path,</if>
+            <if test="fileSize != null ">file_size,</if>
+            <if test="mediaType != null  and mediaType != ''">media_type,</if>
+            <if test="suffix != null  and suffix != ''">suffix,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="fileName != null  and fileName != ''">#{fileName},</if>
+            <if test="filePath != null  and filePath != ''">#{filePath},</if>
+            <if test="fileSize != null ">#{fileSize},</if>
+            <if test="mediaType != null  and mediaType != ''">#{mediaType},</if>
+            <if test="suffix != null  and suffix != ''">#{suffix},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysAttachments" parameterType="SysAttachments">
+        update sys_attachments
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="fileName != null  and fileName != ''">file_name = #{fileName},</if>
+            <if test="filePath != null  and filePath != ''">file_path = #{filePath},</if>
+            <if test="fileSize != null ">file_size = #{fileSize},</if>
+            <if test="mediaType != null  and mediaType != ''">media_type = #{mediaType},</if>
+            <if test="suffix != null  and suffix != ''">suffix = #{suffix},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysAttachmentsById" parameterType="Long">
+        delete from sys_attachments where id = #{id}
+    </delete>
+
+    <delete id="deleteSysAttachmentsByIds" parameterType="String">
+        delete from sys_attachments where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
